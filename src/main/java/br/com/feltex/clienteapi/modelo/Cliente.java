@@ -14,8 +14,9 @@ public class Cliente {
     private String nome;
     private String telefone;
     @Column(unique = true)
+    private String matricula;
+    @Column(unique = true)
     private String email;
-    private String urlImagem;
     private Instant dataCadastro;
     private Instant ultimaAtualizacao;
 

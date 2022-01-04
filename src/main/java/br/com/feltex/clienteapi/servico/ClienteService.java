@@ -38,7 +38,6 @@ public class ClienteService {
 
         clienteAtualizado.setNome(cliente.getNome());
         clienteAtualizado.setTelefone(cliente.getTelefone());
-        clienteAtualizado.setUrlImagem(cliente.getUrlImagem());
         clienteAtualizado.setEmail(cliente.getEmail());
         clienteAtualizado.setUltimaAtualizacao(Instant.now());
         clienteRepotirory.save(clienteAtualizado);

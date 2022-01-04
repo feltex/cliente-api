@@ -28,7 +28,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.19</version>
+            <version>8.0.25</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -43,6 +43,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
