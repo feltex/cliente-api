@@ -1,5 +1,6 @@
 package br.com.feltex.clienteapi.servico;
 
+import br.com.feltex.clienteapi.controller.dto.ClienteRequest;
 import br.com.feltex.clienteapi.dao.ClienteRepotirory;
 import br.com.feltex.clienteapi.exception.ClienteNaoEncontradoException;
 import br.com.feltex.clienteapi.modelo.Cliente;
@@ -26,11 +27,20 @@ public class ClienteService {
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado " + id));
     }
 
-    public void incluir(Cliente cliente) {
+    public Cliente incluir(ClienteRequest clienteRequest) {
         var data = Instant.now();
+
+        var cliente = new Cliente();
+        cliente.setNome(clienteRequest.getNome());
+        cliente.setMatricula(clienteRequest.getMatricula());
+        cliente.setTelefone(clienteRequest.getTelefone());
+        cliente.setEmail(clienteRequest.getEmail());
+        cliente.setFoto(clienteRequest.getFoto());
         cliente.setDataCadastro(data);
         cliente.setUltimaAtualizacao(data);
         clienteRepotirory.save(cliente);
+
+        return cliente;
     }
 
     public Cliente atualizar(Cliente cliente) {

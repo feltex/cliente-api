@@ -1,25 +1,17 @@
-package br.com.feltex.clienteapi.modelo;
+package br.com.feltex.clienteapi.controller.dto;
 
 import lombok.Data;
 
-import javax.persistence.*;
 import java.time.Instant;
 
 @Data
-@Entity
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ClienteResponse {
     private Long id;
     private String nome;
     private String telefone;
-    @Column(unique = true)
     private String matricula;
-    @Column(unique = true)
     private String email;
-    @Lob
     private byte[] foto;
     private Instant dataCadastro;
     private Instant ultimaAtualizacao;
-
 }
