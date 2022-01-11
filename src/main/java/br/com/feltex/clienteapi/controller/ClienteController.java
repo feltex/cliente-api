@@ -1,7 +1,8 @@
 package br.com.feltex.clienteapi.controller;
 
-import br.com.feltex.clienteapi.controller.dto.ClienteRequest;
-import br.com.feltex.clienteapi.controller.dto.ClienteResponse;
+import br.com.feltex.clienteapi.controller.dto.AtualizarClienteRequest;
+import br.com.feltex.clienteapi.controller.dto.IncluirClienteRequest;
+import br.com.feltex.clienteapi.controller.dto.IncluirClienteResponse;
 import br.com.feltex.clienteapi.modelo.Cliente;
 import br.com.feltex.clienteapi.servico.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,21 +37,28 @@ public class ClienteController {
     }
 
     @PostMapping()
-    public ResponseEntity<ClienteResponse> incluir(@RequestParam String clienteData, @RequestParam("file") final MultipartFile file) throws IOException {
+    public ResponseEntity<IncluirClienteResponse> incluir(@RequestParam String clienteData, @RequestParam("file") final MultipartFile file) throws IOException {
 
-        final var cliente = mapper.readValue(clienteData, ClienteRequest.class);
-        cliente.setFoto(file.getInputStream().readAllBytes());
+        final var incluirClienteRequest = mapper.readValue(clienteData, IncluirClienteRequest.class);
+        incluirClienteRequest.setFoto(file.getInputStream().readAllBytes());
 
-        var clienteIncluido = clienteService.incluir(cliente);
-        var clienteResponse = new ClienteResponse();
-        BeanUtils.copyProperties(clienteIncluido, clienteResponse);
+        var cliente = clienteService.incluir(incluirClienteRequest);
+
+        var clienteResponse = new IncluirClienteResponse();
+        BeanUtils.copyProperties(cliente, clienteResponse);
         return new ResponseEntity<>(clienteResponse, HttpStatus.CREATED);
     }
 
     @PutMapping()
-    public ResponseEntity<Cliente> atualizar(@RequestBody Cliente cliente) {
-        var clienteAtualizado = clienteService.atualizar(cliente);
-        return new ResponseEntity<>(clienteAtualizado, HttpStatus.OK);
+    public ResponseEntity<Cliente> atualizar(@RequestParam String clienteData, @RequestParam(value = "file", required = false) final MultipartFile file ) throws IOException {
+        final var atualizarClienteRequest = mapper.readValue(clienteData, AtualizarClienteRequest.class);
+
+        if (file != null){
+            atualizarClienteRequest.setFoto(file.getInputStream().readAllBytes());
+        }
+
+        var cliente = clienteService.atualizar(atualizarClienteRequest);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")

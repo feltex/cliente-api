@@ -1,9 +1,11 @@
 package br.com.feltex.clienteapi.servico;
 
-import br.com.feltex.clienteapi.controller.dto.ClienteRequest;
+import br.com.feltex.clienteapi.controller.dto.AtualizarClienteRequest;
+import br.com.feltex.clienteapi.controller.dto.IncluirClienteRequest;
 import br.com.feltex.clienteapi.dao.ClienteRepotirory;
 import br.com.feltex.clienteapi.exception.ClienteNaoEncontradoException;
 import br.com.feltex.clienteapi.modelo.Cliente;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -27,15 +29,11 @@ public class ClienteService {
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado " + id));
     }
 
-    public Cliente incluir(ClienteRequest clienteRequest) {
+    public Cliente incluir(IncluirClienteRequest clienteRequest) {
         var data = Instant.now();
 
         var cliente = new Cliente();
-        cliente.setNome(clienteRequest.getNome());
-        cliente.setMatricula(clienteRequest.getMatricula());
-        cliente.setTelefone(clienteRequest.getTelefone());
-        cliente.setEmail(clienteRequest.getEmail());
-        cliente.setFoto(clienteRequest.getFoto());
+        BeanUtils.copyProperties(clienteRequest, cliente);
         cliente.setDataCadastro(data);
         cliente.setUltimaAtualizacao(data);
         clienteRepotirory.save(cliente);
@@ -43,15 +41,13 @@ public class ClienteService {
         return cliente;
     }
 
-    public Cliente atualizar(Cliente cliente) {
-        var clienteAtualizado = clienteRepotirory.findById(cliente.getId()).get();
+    public Cliente atualizar(AtualizarClienteRequest atualizarClienteRequest) {
+        var cliente = clienteRepotirory.findById(atualizarClienteRequest.getId()).get();
 
-        clienteAtualizado.setNome(cliente.getNome());
-        clienteAtualizado.setTelefone(cliente.getTelefone());
-        clienteAtualizado.setEmail(cliente.getEmail());
-        clienteAtualizado.setUltimaAtualizacao(Instant.now());
-        clienteRepotirory.save(clienteAtualizado);
-        return clienteAtualizado;
+        BeanUtils.copyProperties(atualizarClienteRequest, cliente);
+        cliente.setUltimaAtualizacao(Instant.now());
+        clienteRepotirory.save(cliente);
+        return cliente;
     }
 
     public void deletar(Long id) {

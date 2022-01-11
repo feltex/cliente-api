@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClienteRequest {
+public class AtualizarClienteRequest {
+    private Long id;
     private String nome;
     private String telefone;
     private String matricula;

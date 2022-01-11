@@ -1,17 +1,14 @@
 package br.com.feltex.clienteapi.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
-public class ClienteResponse {
-    private Long id;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class IncluirClienteRequest {
     private String nome;
     private String telefone;
     private String matricula;
     private String email;
     private byte[] foto;
-    private Instant dataCadastro;
-    private Instant ultimaAtualizacao;
 }
