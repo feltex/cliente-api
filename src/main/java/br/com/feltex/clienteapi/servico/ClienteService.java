@@ -2,7 +2,7 @@ package br.com.feltex.clienteapi.servico;
 
 import br.com.feltex.clienteapi.controller.dto.AtualizarClienteRequest;
 import br.com.feltex.clienteapi.controller.dto.IncluirClienteRequest;
-import br.com.feltex.clienteapi.dao.ClienteRepotirory;
+import br.com.feltex.clienteapi.dao.ClienteRepository;
 import br.com.feltex.clienteapi.exception.ClienteNaoEncontradoException;
 import br.com.feltex.clienteapi.modelo.Cliente;
 import org.springframework.beans.BeanUtils;
@@ -14,18 +14,18 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    private final ClienteRepotirory clienteRepotirory;
+    private final ClienteRepository clienteRepository;
 
-    public ClienteService(ClienteRepotirory clienteRepotirory) {
-        this.clienteRepotirory = clienteRepotirory;
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
     }
 
     public List<Cliente> listar() {
-        return clienteRepotirory.findAll();
+        return clienteRepository.findAll();
     }
 
     public Cliente getCliente(Long id) {
-        return clienteRepotirory.findById(id)
+        return clienteRepository.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não encontrado " + id));
     }
 
@@ -36,21 +36,21 @@ public class ClienteService {
         BeanUtils.copyProperties(clienteRequest, cliente);
         cliente.setDataCadastro(data);
         cliente.setUltimaAtualizacao(data);
-        clienteRepotirory.save(cliente);
+        clienteRepository.save(cliente);
 
         return cliente;
     }
 
     public Cliente atualizar(AtualizarClienteRequest atualizarClienteRequest) {
-        var cliente = clienteRepotirory.findById(atualizarClienteRequest.getId()).get();
+        var cliente = clienteRepository.findById(atualizarClienteRequest.getId()).get();
 
         BeanUtils.copyProperties(atualizarClienteRequest, cliente);
         cliente.setUltimaAtualizacao(Instant.now());
-        clienteRepotirory.save(cliente);
+        clienteRepository.save(cliente);
         return cliente;
     }
 
     public void deletar(Long id) {
-        clienteRepotirory.deleteById(id);
+        clienteRepository.deleteById(id);
     }
 }
