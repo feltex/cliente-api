@@ -6,6 +6,11 @@ import br.com.feltex.clienteapi.controller.dto.IncluirClienteResponse;
 import br.com.feltex.clienteapi.modelo.Cliente;
 import br.com.feltex.clienteapi.servico.ClienteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,12 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
+    @Operation(summary = "Listar todos os clientes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Clientes ativos", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Cliente.class))}),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado", content = @Content)})
     @GetMapping()
     public ResponseEntity<List<Cliente>> listar() {
         return new ResponseEntity<>(clienteService.listar(), HttpStatus.OK);
@@ -50,10 +61,10 @@ public class ClienteController {
     }
 
     @PutMapping()
-    public ResponseEntity<Cliente> atualizar(@RequestParam String clienteData, @RequestParam(value = "file", required = false) final MultipartFile file ) throws IOException {
+    public ResponseEntity<Cliente> atualizar(@RequestParam String clienteData, @RequestParam(value = "file", required = false) final MultipartFile file) throws IOException {
         final var atualizarClienteRequest = mapper.readValue(clienteData, AtualizarClienteRequest.class);
 
-        if (file != null){
+        if (file != null) {
             atualizarClienteRequest.setFoto(file.getInputStream().readAllBytes());
         }
 
