@@ -43,6 +43,11 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Consultar Cliente por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Detalhes de um cliente",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))})
+    })
     public ResponseEntity<Cliente> ler(@PathVariable("id") Long id) {
         return new ResponseEntity<>(clienteService.getCliente(id), HttpStatus.OK);
     }

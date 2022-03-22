@@ -1,5 +1,8 @@
 package br.com.feltex.clienteapi;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,23 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ServerBuilder;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.Arrays;
 
 @SpringBootApplication
-//@OpenAPIDefinition(
-//        info = @Info(title = "API de Clientes", version = "3.0.1", description = "API de acesso aos dados de clientes"),
-//        servers =
-//                {
-//                        @Server(url = "http://cliente-api"),
-//                        @Server(url = "http://localhost:8080")
-//                }
-//
-//)
+@OpenAPIDefinition(
+        info = @Info(title = "API de Clientes", version = "3.0.1", description = "API de acesso aos dados de clientes"),
+        servers =
+                {
+                        @Server(url = "http://cliente-api"),
+                        @Server(url = "http://localhost:8080")
+                }
+)
 @Slf4j
 public class ClienteApiApplication {
 
@@ -48,64 +46,8 @@ public class ClienteApiApplication {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
-
-//    @Bean
-//    public Docket clienteApi() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.any())
-//                .build()
-//                .pathMapping("/")
-//                .directModelSubstitute(LocalDate.class, String.class)
-//                .genericModelSubstitutes(ResponseEntity.class)
-//                .globalResponses(HttpMethod.GET,
-//                        singletonList(new ResponseBuilder()
-//                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value() + "")
-//                                .description(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-//                                .representation(MediaType.APPLICATION_JSON)
-//                                .apply(r ->
-//                                        r.model(m ->
-//                                                m.referenceModel(ref ->
-//                                                        ref.key(k ->
-//                                                                k.qualifiedModelName(q ->
-//                                                                        q.namespace("some:namespace")
-//                                                                                .name("ERROR"))))))
-//                                .build()))
-//                .enableUrlTemplating(true)
-//                .globalRequestParameters(
-//                        singletonList(new RequestParameterBuilder()
-//                                .name("someGlobalParameter")
-//                                .description("Description of someGlobalParameter")
-//                                .in(ParameterType.QUERY)
-//                                .required(true)
-//                                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-//                                .build()))
-//                .tags(new Tag("Pet Service", "All apis relating to pets"));
-//    }
-
-    @Bean
-    public Docket publicApi() {
-
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(new ApiInfoBuilder()
-                        .description("API de acesso aos dados de clientes")
-                        .title("API de Clientes")
-                        .version("3.0.1")
-                        .build())
-                .host("clienteUI")
-                .servers(new ServerBuilder()
-                                .url("http://cliente-api")
-                                .build(),
-                        new ServerBuilder()
-                                .url("http://localhost:8080")
-                                .build(),
-                        new ServerBuilder()
-                                .url("http://feltex.com.br")
-                                .build());
-
-    }
 }
 
 //https://springdoc.org/
 //https://medium.com/javarevisited/api-documentation-using-swagger-3-with-spring-boot-2-spring-security-5a0d2b0996ee
+// https://www.javainuse.com/spring/boot_swagger3
